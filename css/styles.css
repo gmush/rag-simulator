@@ -1,0 +1,279 @@
+:root {
+    --bg-color: #f0f4f8;
+    --grid-color: #cbd5e1;
+    --primary: #0f172a;
+    --accent: #f59e0b;
+    --accent-hover: #d97706;
+    --node-bg: #e2e8f0;
+    --node-border: #64748b;
+    --text-main: #1e293b;
+    --text-muted: #475569;
+    --font-mono: 'Courier New', Courier, monospace;
+    --font-sans: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 20px 20px;
+    font-family: var(--font-sans);
+    color: var(--text-main);
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-family: var(--font-mono);
+    letter-spacing: -0.5px;
+}
+
+.stepper {
+    display: flex;
+    gap: 1rem;
+}
+
+.step-indicator {
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+}
+
+.step-indicator.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Web Components Base Styles */
+main > * {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
+}
+
+main > *.active {
+    display: flex;
+    gap: 2rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Common UI Elements used across Shadow DOMs */
+.panel {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 var(--primary);
+    display: flex;
+    flex-direction: column;
+}
+
+.info-panel {
+    flex: 1;
+    max-width: 400px;
+}
+
+.interactive-panel {
+    flex: 2;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+h2 { margin-top: 0; font-family: var(--font-mono); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
+p { line-height: 1.6; color: var(--text-muted); }
+
+.code-block {
+    background: var(--primary);
+    color: #a5b4fc;
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+button {
+    background: var(--accent);
+    color: white;
+    border: 2px solid var(--primary);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--primary);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+button:hover { background: var(--accent-hover); }
+button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0 var(--primary);
+}
+
+input[type="range"], input[type="text"] {
+    width: 100%;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+}
+
+.controls {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 1rem;
+    border: 2px dashed var(--primary);
+    margin-bottom: 2rem;
+    border-radius: 4px;
+}
+
+/* Specific Visualizations */
+.conveyor {
+    width: 100%;
+    height: 100px;
+    border-top: 4px solid var(--primary);
+    border-bottom: 4px solid var(--primary);
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 20px,
+        rgba(0,0,0,0.05) 20px,
+        rgba(0,0,0,0.05) 40px
+    );
+    animation: moveConveyor 2s linear infinite;
+}
+
+@keyframes moveConveyor {
+    from { background-position: 0 0; }
+    to { background-position: 56px 0; }
+}
+
+.doc-item, .node-item {
+    background: white;
+    border: 2px solid var(--primary);
+    padding: 1rem;
+    margin: 0 1rem;
+    min-width: 100px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-weight: bold;
+    box-shadow: 2px 2px 0 var(--primary);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.node-item {
+    min-width: 60px;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    background: var(--node-bg);
+    border-color: var(--node-border);
+}
+
+.hub-funnel {
+    width: 150px;
+    height: 200px;
+    border: 4px solid var(--primary);
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: var(--font-mono);
+}
+
+.gears {
+    font-size: 3rem;
+    animation: spin 4s linear infinite;
+    display: inline-block;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.vector-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    padding: 20px;
+    background: white;
+    border: 2px solid var(--primary);
+    perspective: 1000px;
+}
+
+.vector-cell {
+    width: 50px;
+    height: 50px;
+    border: 1px dashed var(--node-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: transparent;
+    transition: all 0.5s;
+}
+.vector-cell.filled {
+    background: var(--accent);
+    border: 2px solid var(--primary);
+    color: white;
+    transform: translateZ(20px);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+}
+
+.anim-element { position: absolute; transition: all 1s ease-in-out; }
+
+/* Layout overrides for shadow doms */
+.stage-layout { display: flex; width: 100%; gap: 2rem; height: 100%; }
+.vis-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--node-border); background: rgba(255,255,255,0.5); border-radius: 8px; padding: 2rem; position: relative;}

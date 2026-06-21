@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LlamaIndex RAG Pipeline Interactive Architecture</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>LlamaIndex::RAG_Pipeline</h1>
+        <div class="stepper" id="stepper">
+            <div class="step-indicator active" data-step="1">1. INGESTION</div>
+            <div class="step-indicator" data-step="2">2. CHUNKING</div>
+            <div class="step-indicator" data-step="3">3. INDEXING</div>
+            <div class="step-indicator" data-step="4">4. QUERY & RETRIEVAL</div>
+            <div class="step-indicator" data-step="5">5. REFINEMENT</div>
+            <div class="step-indicator" data-step="6">6. SYNTHESIS</div>
+        </div>
+    </header>
+
+    <main id="app-container">
+        <!-- Etapy są wstrzykiwane jako Web Components definiowane w modułach JS -->
+        <stage-ingestion class="active" id="step-1"></stage-ingestion>
+        <stage-chunking id="step-2"></stage-chunking>
+        <stage-indexing id="step-3"></stage-indexing>
+        <stage-retrieval id="step-4"></stage-retrieval>
+        <stage-refinement id="step-5"></stage-refinement>
+        <stage-synthesis id="step-6"></stage-synthesis>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
