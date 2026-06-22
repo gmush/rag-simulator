@@ -22,10 +22,11 @@ export const translations = {
         stage1By: 'przez',
         
         // Stage 2 - Chunking
-        stage2Title: 'Krok 2: Generowanie Węzłów (Chunking)',
-        stage2Desc1: 'Tną obszerne obiekty',
-        stage2Desc2: 'na mniejsze pakiety semantyczne dopasowane do okna kontekstowego LLM.',
-        stage2Label: 'Strategia Chunkingu:',
+        stage2Title: 'Krok 2: Chunking i Metadata',
+        stage2Desc1: 'Chunking dzieli dokument na mniejsze fragmenty.',
+        stage2Desc2: 'Extractory metadata nie zmieniają granic chunków — dodają do każdego node dodatkowy kontekst.',
+        stage2MetaNote: 'Chunking ustala granice fragmentów. Metadata extraction wzbogaca je o opis, pytania i tytuły, co poprawia rozróżnianie podobnych węzłów.',
+        stage2Label: 'Strategia Chunkingu lub ekstraktor metadata:',
         stage2ChunkSize: 'chunk_size:',
         stage2ChunkOverlap: 'chunk_overlap:',
         stage2Btn: 'Wykonaj Chunking',
@@ -145,10 +146,11 @@ export const translations = {
         stage1By: 'by',
         
         // Stage 2 - Chunking
-        stage2Title: 'Step 2: Node Generation (Chunking)',
-        stage2Desc1: 'Cut large',
-        stage2Desc2: 'objects into smaller semantic packages matching the LLM context window.',
-        stage2Label: 'Chunking Strategy:',
+        stage2Title: 'Step 2: Chunking & Metadata',
+        stage2Desc1: 'Chunking splits a document into smaller fragments.',
+        stage2Desc2: 'Metadata extractors do not change chunk boundaries — they enrich each node with extra context.',
+        stage2MetaNote: 'Chunking defines fragment boundaries. Metadata extraction adds descriptions, questions, and titles so similar nodes are easier to distinguish.',
+        stage2Label: 'Chunking strategy or metadata extractor:',
         stage2ChunkSize: 'chunk_size:',
         stage2ChunkOverlap: 'chunk_overlap:',
         stage2Btn: 'Perform Chunking',

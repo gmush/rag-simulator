@@ -17,7 +17,7 @@ parser = SimpleNodeParser.from_defaults(
     chunk_overlap=200
 )
 nodes = parser.get_nodes_from_documents(docs)
-# Dzieli dokumenty na固定 rozmiaru tokenowego`,
+# Dzieli dokumenty na stały rozmiar tokenowy`,
             sentence: `from llama_index.node_parser import SentenceSplitter
 
 splitter = SentenceSplitter(
@@ -67,7 +67,7 @@ pipeline = IngestionPipeline(
     ]
 )
 nodes = pipeline.run(documents=docs)
-# Ekstrahuje podsumowania do metadata każdego node`,
+# Po chunkingu dodaje podsumowania do metadata każdego node`,
             qa_extractor: `from llama_index.extractors import QuestionsAnsweredExtractor
 
 extractor = QuestionsAnsweredExtractor(
@@ -82,7 +82,7 @@ pipeline = IngestionPipeline(
     ]
 )
 nodes = pipeline.run(documents=docs)
-# Generuje pytania, na które odpowiada node — poprawia retrieval`,
+# Po chunkingu generuje pytania, na które odpowiada node — poprawia retrieval`,
             title_extractor: `from llama_index.extractors import TitleExtractor
 
 extractor = TitleExtractor(
@@ -97,7 +97,7 @@ pipeline = IngestionPipeline(
     ]
 )
 nodes = pipeline.run(documents=docs)
-# Ekstrahuje tytuł dokumentu do metadata`,
+# Po chunkingu dodaje tytuł dokumentu do metadata`,
             keyword_extractor: `from llama_index.extractors import KeywordExtractor
 
 extractor = KeywordExtractor(
@@ -112,7 +112,7 @@ pipeline = IngestionPipeline(
     ]
 )
 nodes = pipeline.run(documents=docs)
-# Ekstrahuje słowa kluczowe do metadata — poprawia keyword search`
+# Po chunkingu dodaje słowa kluczowe do metadata — poprawia keyword search`
         };
         return snippets[method] || snippets.simple;
     }
@@ -137,7 +137,8 @@ nodes = pipeline.run(documents=docs)
                     <h2>${t('stage2Title', lang)}</h2>
                     <p><strong>Node Parsers:</strong><br/>
                     ${t('stage2Desc1', lang)} <code>Document</code> ${t('stage2Desc2', lang)}</p>
-
+                    <p>${t('stage2MetaNote', lang)}</p>
+ 
                     <label>${t('stage2Label', lang)}</label>
                     <select id="splitter-select">
                         <option value="simple">SimpleNodeParser (stały rozmiar tokenowy)</option>
@@ -145,7 +146,7 @@ nodes = pipeline.run(documents=docs)
                         <option value="hierarchical">HierarchicalNodeParser (parent→child)</option>
                         <option value="code">CodeSplitter (świadomy składni kodu)</option>
                         <option value="semantic">SemanticSplitterNodeParser (podobieństwo)</option>
-                        <optgroup label="Metadata Extractors">
+                        <optgroup label="Metadata Extractors (po chunkingu)">
                             <option value="summary_extractor">SummaryExtractor (podsumowania)</option>
                             <option value="qa_extractor">QuestionsAnsweredExtractor (Q&A)</option>
                             <option value="title_extractor">TitleExtractor (tytuły)</option>
