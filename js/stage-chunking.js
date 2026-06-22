@@ -126,11 +126,11 @@ nodes = pipeline.run(documents=docs)
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
-                .hier-node { border-left:4px solid #8b5cf6 !important; padding-left:1rem; }
-                .hier-node.l2 { margin-left:20px; border-left-color:#a78bfa !important; }
-                .hier-node.l3 { margin-left:40px; border-left-color:#c4b5fd !important; }
-                .chunk-label { font-family:'Inter', sans-serif; font-size:0.7rem; color:#64748b; margin-top:0.25rem; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid var(--primary); border-radius:4px; margin-bottom:1rem; background:white; }
+                .hier-node { border-left:4px solid var(--chunk-hier-l1) !important; padding-left:1rem; }
+                .hier-node.l2 { margin-left:20px; border-left-color:var(--chunk-hier-l2) !important; }
+                .hier-node.l3 { margin-left:40px; border-left-color:var(--chunk-hier-l3) !important; }
+                .chunk-label { font-family:'Inter', sans-serif; font-size:0.7rem; color:var(--color-muted); margin-top:0.25rem; }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
@@ -167,19 +167,19 @@ ${this.#getSplitterSnippet('simple')}
                     </button>
                 </div>
                 <div class="vis-area" style="flex-direction: row; align-items: flex-start; overflow-y: auto;">
-                    <div style="flex: 1; border-right: 2px dashed #64748b; padding-right: 1rem;">
+                    <div style="flex: 1; border-right: 2px dashed var(--node-border); padding-right: 1rem;">
                         <h3>${t('stage2Documents', lang)}</h3>
                         <div id="docs-container" style="display: flex; flex-direction: column; gap: 1rem;">
                             ${state.documents.length === 0 ? `<p style="color:red">${t('stage2BackToStep1', lang)}</p>` : ''}
                         </div>
                     </div>
-                    <div style="padding: 2rem; font-size: 2rem; text-align:center;" id="splitter-icon">
-                        ⚙️<br><small style="font-size:0.8rem; font-family:'Inter', sans-serif;">TextSplitter</small>
+                    <div style="padding: 2rem; text-align:center;" id="splitter-icon">
+                        <i class="fa-solid fa-gear" style="font-size:2.5rem; color:#444;"></i><br><small style="font-size:0.8rem; font-family:'Inter', sans-serif;">TextSplitter</small>
                     </div>
                     <div style="flex: 1; padding-left: 1rem;">
                         <h3>${t('stage2TextNodes', lang)}</h3>
                         <div id="nodes-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
-                        <div id="nodes-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; color:#475569; margin-top:0.5rem;"></div>
+                        <div id="nodes-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; color:var(--text-muted); margin-top:0.5rem;"></div>
                     </div>
                 </div>
             </div>
@@ -188,16 +188,16 @@ ${this.#getSplitterSnippet('simple')}
         if(state.documents.length > 0) {
             const docsContainer = this.shadowRoot.getElementById('docs-container');
             state.documents.forEach(d => {
-                docsContainer.innerHTML += `<div class="doc-item">Document [${d.id}]<br><small style="color:#64748b;">${d.metadata?.source || ''}</small></div>`;
+                docsContainer.innerHTML += `<div class="doc-item">Document [${d.id}]<br><small style="color:var(--node-border);">${d.metadata?.source || ''}</small></div>`;
             });
         }
 
         const splitterSel = this.shadowRoot.getElementById('splitter-select');
         splitterSel.addEventListener('change', () => {
             this.shadowRoot.getElementById('code-snippet').textContent = this.#getSplitterSnippet(splitterSel.value);
-            const iconMap = { simple:'⚙️', sentence:'📝', hierarchical:'🌳', code:'💻', semantic:'🧠' };
+            const iconMap = { simple:'fa-gear', sentence:'fa-align-left', hierarchical:'fa-sitemap', code:'fa-code', semantic:'fa-brain' };
             this.shadowRoot.getElementById('splitter-icon').innerHTML = 
-                `${iconMap[splitterSel.value]||'⚙️'}<br><small style="font-size:0.8rem;font-family:'Inter', sans-serif;">${splitterSel.options[splitterSel.selectedIndex].text.split(' ')[0]}</small>`;
+                `<i class="fa-solid ${iconMap[splitterSel.value]||'fa-gear'}" style="font-size:2.5rem; color:#444;"></i><br><small style="font-size:0.8rem;font-family:'Inter', sans-serif;">${splitterSel.options[splitterSel.selectedIndex].text.split(' ')[0]}</small>`;
         });
 
         this.shadowRoot.getElementById('chunk-size')?.addEventListener('input', (e) => {
@@ -280,7 +280,7 @@ ${this.#getSplitterSnippet('simple')}
                 
                 let label = `<b>${node.id}</b><br><small>parent:${node.parentId}</small>`;
                 if (node.topic) label += `<div class="chunk-label">${node.topic}</div>`;
-                if (node.language) label += `<div class="chunk-label">🐍 ${node.language}</div>`;
+                if (node.language) label += `<div class="chunk-label" style="background:#333;color:#fff;padding:2px 8px;border-radius:3px;display:inline-block;"><i class="fa-brands fa-python" style="color:#fff;"></i> ${node.language}</div>`;
                 el.innerHTML = label;
                 
                 el.style.transform = 'scale(0.5)';
@@ -302,7 +302,7 @@ ${this.#getSplitterSnippet('simple')}
 
         const btn = this.shadowRoot.getElementById('btn-split');
         btn.textContent = `${t('stage2Created', lang)} (${totalNodes}) [${t('goToNext', lang)} →]`;
-        btn.style.background = '#10b981';
+        btn.style.background = 'var(--success)';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="3"]').click();
     }
 }

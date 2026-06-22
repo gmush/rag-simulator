@@ -92,12 +92,12 @@ refined_nodes = postprocessor.postprocess_nodes(
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
-                .passed { border-left:5px solid #10b981 !important; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid var(--primary); border-radius:4px; margin-bottom:1rem; background:white; }
+                .passed { border-left:5px solid var(--refine-passed-border) !important; }
                 .failed { opacity:0.4; text-decoration:line-through; }
-                .reordered { border-left:5px solid #3b82f6 !important; }
-                .trimmed { border-left:5px solid #f59e0b !important; }
-                .reranked { border-left:5px solid #ec4899 !important; }
+                .reordered { border-left:5px solid var(--refine-reorder-border) !important; }
+                .trimmed { border-left:5px solid var(--refine-trimmed-border) !important; }
+                .reranked { border-left:5px solid var(--refine-rerank-border) !important; }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
@@ -143,15 +143,15 @@ ${this.#getPostprocessorSnippet('similarity')}
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100px;">
-                            <div style="font-family: 'Inter', sans-serif; font-weight:bold; background: #0f172a; color: white; padding: 0.5rem; text-align: center;" id="filter-label">
+                            <div style="font-family: 'Inter', sans-serif; font-weight:bold; background: var(--primary); color: white; padding: 0.5rem; text-align: center;" id="filter-label">
                                 FILTER<br>>=<span id="lbl-param">0.75</span>
                             </div>
                             <div style="font-size: 2rem;">→</div>
                         </div>
                         <div style="flex:1;">
                             <h3>${t('stage5Output', lang)}</h3>
-                            <div id="refined-nodes" style="min-height: 100px; border: 2px dashed #10b981; padding: 1rem;"></div>
-                            <div id="refined-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
+                            <div id="refined-nodes" style="min-height: 100px; border: 2px dashed var(--refine-passed-border); padding: 1rem;"></div>
+                            <div id="refined-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; margin-top:0.5rem; color:var(--text-muted);"></div>
                         </div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                         setTimeout(() => {
                             const el = document.createElement('div');
                             el.className = 'node-item passed';
-                            el.style.background = '#d1fae5'; el.style.borderColor = '#10b981';
+                            el.style.background = 'var(--refine-passed-bg)'; el.style.borderColor = 'var(--refine-passed-border)';
                             el.innerHTML = `${node.id}<br><small>${t('stage5Passed', lang)} (Score: ${node.score} ≥ ${param})</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
@@ -218,7 +218,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                         setTimeout(() => {
                             const el = document.createElement('div');
                             el.className = 'node-item passed';
-                            el.style.background = '#dbeafe'; el.style.borderColor = '#3b82f6';
+                            el.style.background = 'var(--refine-keyword-bg)'; el.style.borderColor = 'var(--refine-keyword-border)';
                             el.innerHTML = `${node.id}<br><small>${t('stage5ContainsKeywords', lang)}</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
@@ -239,7 +239,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                     setTimeout(() => {
                         const el = document.createElement('div');
                         el.className = 'node-item reordered';
-                        el.style.background = '#e0f2fe'; el.style.borderColor = '#0284c7';
+                        el.style.background = 'var(--refine-reorder-bg)'; el.style.borderColor = 'var(--refine-reorder-border)';
                         el.innerHTML = `${node.id}<br><small>${t('stage5Position', lang)}: ${idx+1} (score: ${node.score})</small>`;
                         refinedContainer.appendChild(el);
                     }, idx * 250);
@@ -255,7 +255,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                         setTimeout(() => {
                             const el = document.createElement('div');
                             el.className = 'node-item trimmed';
-                            el.style.background = '#fef3c7'; el.style.borderColor = '#d97706';
+                            el.style.background = 'var(--refine-trimmed-bg)'; el.style.borderColor = 'var(--refine-trimmed-border)';
                             el.innerHTML = `${node.id}<br><small>${t('stage5Trimmed', lang)}</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
@@ -278,7 +278,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                         setTimeout(() => {
                             const el = document.createElement('div');
                             el.className = 'node-item reranked';
-                            el.style.background = '#fce7f3'; el.style.borderColor = '#db2777';
+                            el.style.background = 'var(--refine-rerank-bg)'; el.style.borderColor = 'var(--refine-rerank-border)';
                             el.innerHTML = `${node.id}<br><small>${t('stage5RerankScore', lang)}: ${node.score}</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
@@ -295,7 +295,7 @@ ${this.#getPostprocessorSnippet('similarity')}
 
         const btn = this.shadowRoot.getElementById('btn-refine');
         btn.textContent = `${t('stage5Cleaned', lang)} (${state.refinedNodes.length} ${t('stage2Nodes', lang)}) [${t('goToNext', lang)} →]`;
-        btn.style.background = '#10b981';
+        btn.style.background = 'var(--success)';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="6"]').click();
     }
 }

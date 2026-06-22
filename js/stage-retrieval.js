@@ -88,9 +88,9 @@ nodes = retriever.retrieve("Jak działa RAG?")
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
-                .retriever-badge { display:inline-block; padding:0.25rem 0.75rem; border:2px solid #0f172a; font-family:'Inter', sans-serif; font-size:0.7rem; margin:0.25rem; border-radius:4px; }
-                .retriever-badge.used { background:#dbeafe; border-color:#3b82f6; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid var(--primary); border-radius:4px; margin-bottom:1rem; background:white; }
+                .retriever-badge { display:inline-block; padding:0.25rem 0.75rem; border:1px solid #555; font-family:'Inter', sans-serif; font-size:0.7rem; margin:0.25rem; border-radius:4px; background:#333; color:#fff; }
+                .retriever-badge.used { background:#555; border-color:#777; }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
@@ -122,12 +122,12 @@ ${this.#getRetrieverSnippet('vector')}
                     </button>
                 </div>
                 <div class="vis-area" style="align-items: flex-start;">
-                    <div style="display:flex; width: 100%; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
-                        <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: 'Inter', sans-serif;">
-                            <b>Query Vector:</b><br><span id="q-vec" style="color: #3b82f6;">[...]</span>
+                    <div style="display:flex; width: 100%; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
+                        <div style="background: white; padding: 1rem; border: 2px solid var(--primary); font-family: 'Inter', sans-serif;">
+                            <b>Query Vector:</b><br><span id="q-vec" style="color: var(--color-blue);">[...]</span>
                         </div>
-                        <div style="font-size: 1.5rem;" id="method-icon">🧮</div>
-                        <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: 'Inter', sans-serif;">
+                        <div id="method-icon"><i class="fa-solid fa-calculator" style="font-size:2rem; color:#444;"></i></div>
+                        <div style="background: white; padding: 1rem; border: 2px solid var(--primary); font-family: 'Inter', sans-serif;">
                             <b>${t('stage4Method', lang)}</b><br><span id="method-label">Cosine Similarity</span>
                         </div>
                     </div>
@@ -145,9 +145,9 @@ ${this.#getRetrieverSnippet('vector')}
             const m = retSel.value;
             this.shadowRoot.getElementById('code-snippet').textContent = this.#getRetrieverSnippet(m);
             this.shadowRoot.getElementById('btn-retrieve').textContent = `Uruchom ${retSel.options[retSel.selectedIndex].text.split(' ')[0]}`;
-            const icons = { vector:'🧮', bm25:'🔤', hybrid:'🔀', recursive:'🔄', router:'🧭' };
+            const icons = { vector:'fa-calculator', bm25:'fa-font', hybrid:'fa-shuffle', recursive:'fa-repeat', router:'fa-compass' };
             const labels = { vector:'Cosine KNN', bm25:'BM25/TF-IDF', hybrid:'Vector + Keyword + RRF', recursive:'Hierarchiczny', router:'LLM Selector' };
-            this.shadowRoot.getElementById('method-icon').textContent = icons[m] || '🧮';
+            this.shadowRoot.getElementById('method-icon').innerHTML = `<i class="fa-solid ${icons[m]||'fa-calculator'}" style="font-size:2rem; color:#444;"></i>`;
             this.shadowRoot.getElementById('method-label').textContent = labels[m] || 'Cosine';
             this.#updateBadges(m);
         });
@@ -201,8 +201,20 @@ ${this.#getRetrieverSnippet('vector')}
             retrieverMethod: method
         })).sort((a,b) => b.score - a.score);
 
-        const colors = { vector:'#fef3c7', bm25:'#e0f2fe', hybrid:'#f3e8ff', recursive:'#ffe4e6', router:'#d1fae5' };
-        const borderColors = { vector:'#d97706', bm25:'#0284c7', hybrid:'#7c3aed', recursive:'#e11d48', router:'#059669' };
+        const colors = { 
+            vector: 'var(--retriever-vector-bg)', 
+            bm25: 'var(--retriever-bm25-bg)', 
+            hybrid: 'var(--retriever-hybrid-bg)', 
+            recursive: 'var(--retriever-recursive-bg)', 
+            router: 'var(--retriever-router-bg)' 
+        };
+        const borderColors = { 
+            vector: 'var(--retriever-vector-border)', 
+            bm25: 'var(--retriever-bm25-border)', 
+            hybrid: 'var(--retriever-hybrid-border)', 
+            recursive: 'var(--retriever-recursive-border)', 
+            router: 'var(--retriever-router-border)' 
+        };
 
         state.retrievedNodes.forEach((node, idx) => {
             setTimeout(() => {
@@ -210,8 +222,8 @@ ${this.#getRetrieverSnippet('vector')}
                 el.className = 'node-item';
                 el.style.display = 'flex';
                 el.style.justifyContent = 'space-between';
-                el.style.background = colors[method] || '#fef3c7';
-                el.style.borderColor = borderColors[method] || '#d97706';
+                el.style.background = colors[method] || 'var(--retriever-vector-bg)';
+                el.style.borderColor = borderColors[method] || 'var(--retriever-vector-border)';
                 el.innerHTML = `
                     <span><b>${node.id}</b> (${t('stage4FromDoc', lang)} ${node.parentId})</span>
                     <span style="color: ${borderColors[method]}; font-weight: bold;">${t('stage4Score', lang)} ${node.score}</span>
@@ -222,7 +234,7 @@ ${this.#getRetrieverSnippet('vector')}
 
         const btn = this.shadowRoot.getElementById('btn-retrieve');
         btn.textContent = `${t('stage4Retrieved', lang)} (${state.retrievedNodes.length} ${t('stage4Nodes', lang)}) [${t('goToNext', lang)} →]`;
-        btn.style.background = '#10b981';
+        btn.style.background = 'var(--success)';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="5"]').click();
     }
 }

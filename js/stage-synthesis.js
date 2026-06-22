@@ -68,27 +68,27 @@ print(response)
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid var(--primary); border-radius:4px; margin-bottom:1rem; background:white; }
                 .engine-block {
-                    border: 4px solid #0f172a;
-                    background: #e2e8f0;
+                    border: 4px solid var(--primary);
+                    background: var(--synth-engine-bg);
                     border-radius: 12px;
                     padding: 2rem;
                     text-align: center;
                     position: relative;
                     box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
                 }
-                .engine-block.compact-mode { border-color:#3b82f6; }
-                .engine-block.tree-mode { border-color:#8b5cf6; }
-                .engine-block.refine-mode { border-color:#f59e0b; }
-                .engine-block.simple-mode { border-color:#10b981; }
-                .engine-block.accumulate-mode { border-color:#ec4899; }
+                .engine-block.compact-mode { border-color:var(--synth-compact); }
+                .engine-block.tree-mode { border-color:var(--synth-tree); }
+                .engine-block.refine-mode { border-color:var(--synth-refine); }
+                .engine-block.simple-mode { border-color:var(--synth-simple); }
+                .engine-block.accumulate-mode { border-color:var(--synth-accumulate); }
                 .piston {
                     width: 30px; height: 60px;
-                    background: #64748b;
+                    background: var(--color-muted);
                     display: inline-block;
                     margin: 0 10px;
-                    border: 2px solid #0f172a;
+                    border: 2px solid var(--primary);
                     transition: background 0.3s;
                 }
                 .piston.anim { animation: pump 0.5s infinite alternate; }
@@ -101,8 +101,8 @@ print(response)
                     to { transform: translateY(-20px); }
                 }
                 .output-box {
-                    background: #1e293b;
-                    color: #10b981;
+                    background: var(--synth-output-bg);
+                    color: var(--synth-output-text);
                     font-family: 'Inter', sans-serif;
                     padding: 1rem;
                     border-radius: 4px;
@@ -144,11 +144,11 @@ ${this.#getSynthesisSnippet('compact')}
                 </div>
                 <div class="vis-area">
                     <div style="display:flex; width: 100%; justify-content: space-around; margin-bottom: 2rem;">
-                        <div style="background: white; border: 2px dashed #0f172a; padding: 1rem; flex: 1; margin-right: 1rem;">
+                        <div style="background: white; border: 2px dashed var(--primary); padding: 1rem; flex: 1; margin-right: 1rem;">
                             <b>${t('stage6Query', lang)}</b><br>
                             <small>${state.query || t('stage6NoQuery', lang)}</small>
                         </div>
-                        <div style="background: white; border: 2px dashed #0f172a; padding: 1rem; flex: 1; margin-left: 1rem;">
+                        <div style="background: white; border: 2px dashed var(--primary); padding: 1rem; flex: 1; margin-left: 1rem;">
                             <b>${t('stage6ContextNodes', lang)}</b><br>
                             <small>${state.refinedNodes.map(n => n.id).join(', ') || t('stage6NoContext', lang)}</small>
                         </div>
@@ -164,7 +164,7 @@ ${this.#getSynthesisSnippet('compact')}
                     <div style="font-size: 2rem; margin: 1rem 0;">↓</div>
 
                     <div class="output-box" id="final-output"></div>
-                    <div id="synth-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
+                    <div id="synth-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; margin-top:0.5rem; color:var(--text-muted);"></div>
                 </div>
             </div>
         `;
@@ -187,8 +187,8 @@ ${this.#getSynthesisSnippet('compact')}
         title.textContent = titles[method] || 'LLM Synthesis Engine';
         const pistons = this.shadowRoot.querySelectorAll('.piston');
         pistons.forEach(p => p.style.background = {
-            compact:'#3b82f6', tree_summarize:'#8b5cf6', refine:'#f59e0b', simple_summarize:'#10b981', accumulate:'#ec4899'
-        }[method] || '#64748b');
+            compact:'var(--synth-compact)', tree_summarize:'var(--synth-tree)', refine:'var(--synth-refine)', simple_summarize:'var(--synth-simple)', accumulate:'var(--synth-accumulate)'
+        }[method] || 'var(--color-muted)');
     }
 
     performSynthesis() {

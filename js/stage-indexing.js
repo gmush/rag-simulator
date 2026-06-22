@@ -79,11 +79,11 @@ index = DocumentSummaryIndex(
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid var(--primary); border-radius:4px; margin-bottom:1rem; background:white; }
                 .vector-store {
                     display: grid; grid-template-columns: repeat(4, 1fr);
                     gap: 10px; background: white; padding: 20px;
-                    border: 2px solid #0f172a; border-radius: 4px;
+                    border: 2px solid var(--primary); border-radius: 4px;
                     perspective: 800px;
                     transform-style: preserve-3d;
                     box-shadow: -10px 20px 0 rgba(15, 23, 42, 0.1);
@@ -91,19 +91,19 @@ index = DocumentSummaryIndex(
                 .index-vis { transition: all 0.5s; }
                 .v-cell {
                     width: 60px; height: 60px;
-                    border: 1px dashed #cbd5e1;
+                    border: 1px dashed var(--index-cell-empty-border);
                     background: rgba(255,255,255,0.8);
                     display: flex; align-items: center; justify-content: center;
-                    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: #94a3b8;
+                    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--index-cell-empty-text);
                     transition: all 0.4s; transform: translateZ(0);
                     text-align:center; word-break:break-all;
                 }
-                .v-cell.filled-vector { background: #3b82f6; color: white; border: 2px solid #1e3a8a; transform: translateZ(20px); box-shadow: -5px 5px 10px rgba(0,0,0,0.3); }
-                .v-cell.filled-summary { background: #10b981; color: white; border: 2px solid #065f46; }
-                .v-cell.filled-keyword { background: #f59e0b; color: white; border: 2px solid #92400e; }
-                .v-cell.filled-tree { background: #8b5cf6; color: white; border: 2px solid #5b21b6; transform: translateZ(15px); }
-                .v-cell.filled-knowledge { background: #ec4899; color: white; border: 2px solid #9d174d; transform: translateZ(25px); border-radius:50%; }
-                .index-stats { font-family:monospace; margin-top:1rem; padding:0.5rem 1rem; background:white; border:2px dashed #0f172a; }
+                .v-cell.filled-vector { background: var(--index-vector-bg); color: white; border: 2px solid var(--index-vector-border); transform: translateZ(20px); box-shadow: -5px 5px 10px rgba(0,0,0,0.3); }
+                .v-cell.filled-summary { background: var(--index-summary-bg); color: white; border: 2px solid var(--index-summary-border); }
+                .v-cell.filled-keyword { background: var(--index-keyword-bg); color: white; border: 2px solid var(--index-keyword-border); }
+                .v-cell.filled-tree { background: var(--index-tree-bg); color: white; border: 2px solid var(--index-tree-border); transform: translateZ(15px); }
+                .v-cell.filled-knowledge { background: var(--index-knowledge-bg); color: white; border: 2px solid var(--index-knowledge-border); transform: translateZ(25px); border-radius:50%; }
+                .index-stats { font-family:monospace; margin-top:1rem; padding:0.5rem 1rem; background:white; border:2px dashed var(--primary); }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
@@ -171,7 +171,7 @@ ${this.#getIndexSnippet('vector')}
                         cells[idx].innerHTML = `${node.id}`;
                     } else if (method === 'keyword') {
                         const kw = ['RAG','LLM','wektor','indeks','embedding','GPU','token','prompt'][idx % 8];
-                        cells[idx].innerHTML = `🔑<br>${kw}`;
+                        cells[idx].innerHTML = `<i class="fa-solid fa-key" style="font-size:0.9rem; color:#fff;"></i><br>${kw}`;
                     } else if (method === 'tree') {
                         cells[idx].innerHTML = `${node.id}`;
                     } else {
@@ -190,7 +190,7 @@ ${this.#getIndexSnippet('vector')}
 
         const btn = this.shadowRoot.getElementById('btn-index');
         btn.textContent = `${t('stage3Ready', lang)} [${t('goToNext', lang)} →]`;
-        btn.style.background = '#10b981';
+        btn.style.background = 'var(--success)';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="4"]').click();
     }
 }

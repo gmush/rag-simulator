@@ -89,10 +89,10 @@ documents = reader.load_data([
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid var(--primary); border-radius:4px; margin-bottom:1rem; background:white; }
                 .source-icons { display:flex; flex-direction:column; gap:10px; justify-content:center; }
-                .src-badge { padding:0.5rem 1rem; border:2px solid #0f172a; background:white; font-family:'Inter', sans-serif; font-size:0.8rem; border-radius:4px; }
-                .src-badge.active-src { background:#fef3c7; border-color:#d97706; }
+                .src-badge { padding:0.5rem 1rem; border:1px solid #555; background:#333; color:#fff; font-family:'Inter', sans-serif; font-size:0.8rem; border-radius:4px; display:flex; align-items:center; gap:6px; }
+                .src-badge.active-src { background:#555; border-color:#777; }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
@@ -124,23 +124,23 @@ ${this.#getLoaderSnippet('simple')}
                 <div class="vis-area">
                     <div style="display: flex; align-items: center; width: 100%; gap: 20px; flex-wrap:wrap; justify-content:center;">
                         <div class="source-icons" id="source-icons">
-                            <div class="src-badge active-src">📄 PDF</div>
-                            <div class="src-badge active-src">📝 TXT</div>
-                            <div class="src-badge">📊 JSON</div>
-                            <div class="src-badge">🗄️ DB</div>
-                            <div class="src-badge">📓 Notion</div>
-                            <div class="src-badge">🌐 Wiki</div>
-                            <div class="src-badge">🌍 Web</div>
+                            <div class="src-badge active-src"><i class="fa-solid fa-file-pdf fa-fw" style="color:#fff;"></i> PDF</div>
+                            <div class="src-badge active-src"><i class="fa-solid fa-file-lines fa-fw" style="color:#fff;"></i> TXT</div>
+                            <div class="src-badge"><i class="fa-solid fa-code fa-fw" style="color:#fff;"></i> JSON</div>
+                            <div class="src-badge"><i class="fa-solid fa-database fa-fw" style="color:#fff;"></i> DB</div>
+                            <div class="src-badge"><i class="fa-solid fa-book fa-fw" style="color:#fff;"></i> Notion</div>
+                            <div class="src-badge"><i class="fa-solid fa-globe fa-fw" style="color:#fff;"></i> Wiki</div>
+                            <div class="src-badge"><i class="fa-solid fa-window-maximize fa-fw" style="color:#fff;"></i> Web</div>
                         </div>
                         <div style="font-size: 2rem;">→</div>
-                        <div style="border: 4px solid #0f172a; padding: 20px; border-radius: 8px; text-align: center; background: #fff;" id="loader-hub">
+                        <div style="border: 4px solid var(--primary); padding: 20px; border-radius: 8px; text-align: center; background: white;" id="loader-hub">
                             <strong>LlamaHub</strong><br><span id="loader-name">SimpleDirectoryReader</span>
                         </div>
                         <div style="font-size: 2rem;">→</div>
                         <div class="conveyor" id="conveyor" style="flex: 1; min-width:200px;">
                         </div>
                     </div>
-                    <div id="doc-count" style="margin-top:1rem; font-family:'Inter', sans-serif; color:#475569;"></div>
+                    <div id="doc-count" style="margin-top:1rem; font-family:'Inter', sans-serif; color:var(--text-muted);"></div>
                 </div>
             </div>
         `;
@@ -222,7 +222,7 @@ ${this.#getLoaderSnippet('simple')}
             setTimeout(() => {
                 const el = document.createElement('div');
                 el.className = 'doc-item';
-                el.innerHTML = `Document<br><small>${doc.id}</small><br><small style="color:#64748b;">${doc.metadata.source}</small>`;
+                el.innerHTML = `Document<br><small>${doc.id}</small><br><small style="color:var(--node-border);">${doc.metadata.source}</small>`;
                 el.style.transform = 'translateX(300px)';
                 el.style.opacity = '0';
                 el.style.transition = 'all 0.5s ease-out';
@@ -239,7 +239,7 @@ ${this.#getLoaderSnippet('simple')}
         
         const btn = this.shadowRoot.getElementById('btn-load');
         btn.textContent = `${t('stage1Loaded', lang)} (${state.documents.length} ${t('stage1Docs', lang)}) [${t('stage1Next', lang)} →]`;
-        btn.style.background = '#10b981';
+        btn.style.background = 'var(--success)';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="2"]').click();
     }
 }
