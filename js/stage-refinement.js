@@ -1,4 +1,5 @@
 import { state, sharedStyles } from './state.js';
+import { t } from './i18n.js';
 
 // --- STAGE 5: REFINEMENT ---
 class StageRefinement extends HTMLElement {
@@ -65,6 +66,7 @@ refined_nodes = postprocessor.postprocess_nodes(
     }
 
     render() {
+        const lang = state.lang;
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
@@ -77,11 +79,11 @@ refined_nodes = postprocessor.postprocess_nodes(
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
-                    <h2>Krok 5: Rafinacja (Postprocessing)</h2>
+                    <h2>${t('stage5Title', lang)}</h2>
                     <p><strong>Node Postprocessors:</strong><br/>
-                    Odrzucanie szumu i optymalizacja kontekstu przed wysłaniem do LLM.</p>
+                    ${t('stage5Desc', lang)}</p>
 
-                    <label>Rodzaj Postprocessora:</label>
+                    <label>${t('stage5Label', lang)}</label>
                     <select id="postprocessor-select">
                         <option value="similarity">SimilarityPostprocessor (próg score)</option>
                         <option value="keyword">KeywordNodePostprocessor (słowa kluczowe)</option>
@@ -97,15 +99,15 @@ refined_nodes = postprocessor.postprocess_nodes(
 ${this.#getPostprocessorSnippet('similarity')}
                     </div>
                     <button id="btn-refine" ${state.retrievedNodes.length === 0 ? 'disabled' : ''}>
-                        ${state.retrievedNodes.length === 0 ? 'Brak danych z kroku 4' : 'Aplikuj Postprocesory'}
+                        ${state.retrievedNodes.length === 0 ? t('stage5NoData', lang) : t('stage5Btn', lang)}
                     </button>
                 </div>
                 <div class="vis-area">
                     <div style="display:flex; width: 100%; gap: 2rem;">
                         <div style="flex:1;">
-                            <h3>Wejście (Retrieved)</h3>
+                            <h3>${t('stage5Input', lang)}</h3>
                             <div id="raw-nodes">
-                                ${state.retrievedNodes.length === 0 ? '<span style="color:red">Brak danych</span>' : 
+                                ${state.retrievedNodes.length === 0 ? `<span style="color:red">${t('stage5NoDataMsg', lang)}</span>` : 
                                     state.retrievedNodes.map(n => `
                                         <div class="node-item" id="raw-${n.id}">
                                             ${n.id} | Score: ${n.score}
@@ -121,7 +123,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                             <div style="font-size: 2rem;">→</div>
                         </div>
                         <div style="flex:1;">
-                            <h3>Wyjście (Refined)</h3>
+                            <h3>${t('stage5Output', lang)}</h3>
                             <div id="refined-nodes" style="min-height: 100px; border: 2px dashed #10b981; padding: 1rem;"></div>
                             <div id="refined-stats" style="font-family:monospace; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
                         </div>
@@ -155,6 +157,7 @@ ${this.#getPostprocessorSnippet('similarity')}
     }
 
     performRefinement() {
+        const lang = state.lang;
         const method = this.shadowRoot.getElementById('postprocessor-select').value;
         const param = parseFloat(this.shadowRoot.getElementById('param-slider').value);
         const refinedContainer = this.shadowRoot.getElementById('refined-nodes');
@@ -172,7 +175,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                             const el = document.createElement('div');
                             el.className = 'node-item passed';
                             el.style.background = '#d1fae5'; el.style.borderColor = '#10b981';
-                            el.innerHTML = `${node.id}<br><small>Passed (Score: ${node.score} ≥ ${param})</small>`;
+                            el.innerHTML = `${node.id}<br><small>${t('stage5Passed', lang)} (Score: ${node.score} ≥ ${param})</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
                     } else {
@@ -190,7 +193,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                             const el = document.createElement('div');
                             el.className = 'node-item passed';
                             el.style.background = '#dbeafe'; el.style.borderColor = '#3b82f6';
-                            el.innerHTML = `${node.id}<br><small>Zawiera słowa kluczowe</small>`;
+                            el.innerHTML = `${node.id}<br><small>${t('stage5ContainsKeywords', lang)}</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
                     } else {
@@ -211,7 +214,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                         const el = document.createElement('div');
                         el.className = 'node-item reordered';
                         el.style.background = '#e0f2fe'; el.style.borderColor = '#0284c7';
-                        el.innerHTML = `${node.id}<br><small>Pozycja: ${idx+1} (score: ${node.score})</small>`;
+                        el.innerHTML = `${node.id}<br><small>${t('stage5Position', lang)}: ${idx+1} (score: ${node.score})</small>`;
                         refinedContainer.appendChild(el);
                     }, idx * 250);
                 });
@@ -227,7 +230,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                             const el = document.createElement('div');
                             el.className = 'node-item trimmed';
                             el.style.background = '#fef3c7'; el.style.borderColor = '#d97706';
-                            el.innerHTML = `${node.id}<br><small>Trimmed (nieistotne zdania usunięte)</small>`;
+                            el.innerHTML = `${node.id}<br><small>${t('stage5Trimmed', lang)}</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
                     } else {
@@ -250,7 +253,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                             const el = document.createElement('div');
                             el.className = 'node-item reranked';
                             el.style.background = '#fce7f3'; el.style.borderColor = '#db2777';
-                            el.innerHTML = `${node.id}<br><small>ML Rerank score: ${node.score}</small>`;
+                            el.innerHTML = `${node.id}<br><small>${t('stage5RerankScore', lang)}: ${node.score}</small>`;
                             refinedContainer.appendChild(el);
                         }, idx * 250);
                     }
@@ -262,10 +265,10 @@ ${this.#getPostprocessorSnippet('similarity')}
 
         const methodNames = { similarity:'SimilarityPostprocessor', keyword:'KeywordFilter', reorder:'LongContextReorder', optimizer:'SentenceOptimizer', rerank:'CohereRerank' };
         this.shadowRoot.getElementById('refined-stats').textContent = 
-            `${state.retrievedNodes.length} → ${state.refinedNodes.length} węzłów (${methodNames[method]})`;
+            `${state.retrievedNodes.length} → ${state.refinedNodes.length} ${t('stage2Nodes', lang)} (${methodNames[method]})`;
 
         const btn = this.shadowRoot.getElementById('btn-refine');
-        btn.textContent = `Dane Oczyszczone (${state.refinedNodes.length} węzłów) [Przejdź dalej →]`;
+        btn.textContent = `${t('stage5Cleaned', lang)} (${state.refinedNodes.length} ${t('stage2Nodes', lang)}) [${t('goToNext', lang)} →]`;
         btn.style.background = '#10b981';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="6"]').click();
     }

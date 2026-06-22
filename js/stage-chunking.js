@@ -1,4 +1,5 @@
 import { state, sharedStyles } from './state.js';
+import { t } from './i18n.js';
 
 // --- STAGE 2: CHUNKING ---
 class StageChunking extends HTMLElement {
@@ -59,6 +60,7 @@ nodes = splitter.get_nodes_from_documents(docs)
     }
     
     render() {
+        const lang = state.lang;
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
@@ -70,11 +72,11 @@ nodes = splitter.get_nodes_from_documents(docs)
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
-                    <h2>Krok 2: Generowanie Węzłów (Chunking)</h2>
+                    <h2>${t('stage2Title', lang)}</h2>
                     <p><strong>Node Parsers:</strong><br/>
-                    Tną obszerne obiekty <code>Document</code> na mniejsze pakiety semantyczne dopasowane do okna kontekstowego LLM.</p>
+                    ${t('stage2Desc1', lang)} <code>Document</code> ${t('stage2Desc2', lang)}</p>
 
-                    <label>Strategia Chunkingu:</label>
+                    <label>${t('stage2Label', lang)}</label>
                     <select id="splitter-select">
                         <option value="simple">SimpleNodeParser (stały rozmiar tokenowy)</option>
                         <option value="sentence">SentenceSplitter (granice zdań)</option>
@@ -83,31 +85,31 @@ nodes = splitter.get_nodes_from_documents(docs)
                         <option value="semantic">SemanticSplitterNodeParser (podobieństwo)</option>
                     </select>
 
-                    <label>chunk_size: <span id="val-size">1024</span></label>
+                    <label>${t('stage2ChunkSize', lang)} <span id="val-size">1024</span></label>
                     <input type="range" id="chunk-size" min="256" max="2048" step="256" value="1024">
                     
-                    <label>chunk_overlap: <span id="val-overlap">20</span>%</label>
+                    <label>${t('stage2ChunkOverlap', lang)} <span id="val-overlap">20</span>%</label>
                     <input type="range" id="chunk-overlap" min="0" max="50" step="10" value="20">
 
                     <div class="code-block" id="code-snippet">
 ${this.#getSplitterSnippet('simple')}
                     </div>
                     <button id="btn-split" ${state.documents.length === 0 ? 'disabled' : ''}>
-                        ${state.documents.length === 0 ? 'Brak dokumentów z kroku 1' : 'Wykonaj Chunking (get_nodes)'}
+                        ${state.documents.length === 0 ? t('stage2NoDocs', lang) : t('stage2Btn', lang)}
                     </button>
                 </div>
                 <div class="vis-area" style="flex-direction: row; align-items: flex-start; overflow-y: auto;">
                     <div style="flex: 1; border-right: 2px dashed #64748b; padding-right: 1rem;">
-                        <h3>Documents</h3>
+                        <h3>${t('stage2Documents', lang)}</h3>
                         <div id="docs-container" style="display: flex; flex-direction: column; gap: 1rem;">
-                            ${state.documents.length === 0 ? '<p style="color:red">Wróć do Kroku 1 i załaduj dane.</p>' : ''}
+                            ${state.documents.length === 0 ? `<p style="color:red">${t('stage2BackToStep1', lang)}</p>` : ''}
                         </div>
                     </div>
                     <div style="padding: 2rem; font-size: 2rem; text-align:center;" id="splitter-icon">
                         ⚙️<br><small style="font-size:0.8rem; font-family:monospace;">TextSplitter</small>
                     </div>
                     <div style="flex: 1; padding-left: 1rem;">
-                        <h3>TextNodes</h3>
+                        <h3>${t('stage2TextNodes', lang)}</h3>
                         <div id="nodes-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
                         <div id="nodes-stats" style="font-family:monospace; font-size:0.8rem; color:#475569; margin-top:0.5rem;"></div>
                     </div>
@@ -228,10 +230,10 @@ ${this.#getSplitterSnippet('simple')}
         const totalNodes = state.nodes.length;
         const methodName = this.shadowRoot.getElementById('splitter-select').options[this.shadowRoot.getElementById('splitter-select').selectedIndex].text.split(' ')[0];
         this.shadowRoot.getElementById('nodes-stats').textContent = 
-            `Utworzono ${totalNodes} węzłów (${rootNodes} głównych) — ${methodName}`;
+            `${t('stage2Created', lang)} ${totalNodes} ${t('stage2Nodes', lang)} (${rootNodes} ${t('stage2RootNodes', lang)}) — ${methodName}`;
 
         const btn = this.shadowRoot.getElementById('btn-split');
-        btn.textContent = `Węzły utworzone (${totalNodes}) [Przejdź dalej →]`;
+        btn.textContent = `${t('stage2Created', lang)} (${totalNodes}) [${t('goToNext', lang)} →]`;
         btn.style.background = '#10b981';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="3"]').click();
     }

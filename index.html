@@ -9,7 +9,7 @@
 <body>
 
     <header>
-        <h1>LlamaIndex::RAG_Pipeline</h1>
+        <h1 id="app-title">LlamaIndex::RAG_Pipeline</h1>
         <div class="stepper" id="stepper">
             <div class="step-indicator active" data-step="1">1. INGESTION</div>
             <div class="step-indicator" data-step="2">2. CHUNKING</div>
@@ -17,6 +17,10 @@
             <div class="step-indicator" data-step="4">4. QUERY & RETRIEVAL</div>
             <div class="step-indicator" data-step="5">5. REFINEMENT</div>
             <div class="step-indicator" data-step="6">6. SYNTHESIS</div>
+        </div>
+        <div class="lang-switcher">
+            <button id="lang-pl" class="lang-btn active">PL</button>
+            <button id="lang-en" class="lang-btn">EN</button>
         </div>
     </header>
 

@@ -1,4 +1,5 @@
 import { state, sharedStyles } from './state.js';
+import { t } from './i18n.js';
 
 // --- STAGE 4: QUERY & RETRIEVAL ---
 class StageRetrieval extends HTMLElement {
@@ -62,6 +63,7 @@ nodes = retriever.retrieve("Jak działa RAG?")
     }
     
     render() {
+        const lang = state.lang;
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
@@ -71,11 +73,11 @@ nodes = retriever.retrieve("Jak działa RAG?")
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
-                    <h2>Krok 4: Wyszukiwanie (Retrieval)</h2>
+                    <h2>${t('stage4Title', lang)}</h2>
                     <p><strong>Mechanizmy Wyszukiwania (Retrievers):</strong><br/>
-                    Konwersja zapytania użytkownika na wektor. Matematyczne porównanie z wektorami w bazie. Pobiera top-k pasujących węzłów.</p>
+                    ${t('stage4Desc', lang)}</p>
 
-                    <label>Typ Retrievera:</label>
+                    <label>${t('stage4Label', lang)}</label>
                     <select id="retriever-select">
                         <option value="vector">VectorIndexRetriever (KNN cosine)</option>
                         <option value="bm25">BM25Retriever (keyword TF-IDF)</option>
@@ -84,30 +86,30 @@ nodes = retriever.retrieve("Jak działa RAG?")
                         <option value="router">RouterRetriever (LLM wybiera metodę)</option>
                     </select>
 
-                    <label>Zapytanie użytkownika:</label>
+                    <label>${t('stage4Query', lang)}</label>
                     <input type="text" id="user-query" value="Jak działa RAG w LlamaIndex?" placeholder="Wpisz zapytanie...">
                     
                     <div class="code-block" id="code-snippet">
 ${this.#getRetrieverSnippet('vector')}
                     </div>
                     <button id="btn-retrieve" ${state.vectorIndex.length === 0 ? 'disabled' : ''}>
-                        ${state.vectorIndex.length === 0 ? 'Brak indeksu z kroku 3' : 'Uruchom VectorIndexRetriever'}
+                        ${state.vectorIndex.length === 0 ? t('stage4NoIndex', lang) : `${t('stage4Btn', lang)} VectorIndexRetriever`}
                     </button>
                 </div>
                 <div class="vis-area" style="align-items: flex-start;">
                     <div style="display:flex; width: 100%; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
                         <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: monospace;">
-                            <b>Query Vector:</b><br><span id="q-vec" style="color: #3b82f6;">[...]</span>
+                            <b>${t('stage4QueryVector', lang)}</b><br><span id="q-vec" style="color: #3b82f6;">[...]</span>
                         </div>
                         <div style="font-size: 1.5rem;" id="method-icon">🧮</div>
                         <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: monospace;">
-                            <b>Metoda</b><br><span id="method-label">Cosine Similarity</span>
+                            <b>${t('stage4Method', lang)}</b><br><span id="method-label">Cosine Similarity</span>
                         </div>
                     </div>
 
                     <div id="retriever-badges" style="margin-bottom:0.5rem;"></div>
                     
-                    <h3 style="margin-top:0;">Retrieved Nodes (Top-K)</h3>
+                    <h3 style="margin-top:0;">${t('stage4RetrievedNodes', lang)}</h3>
                     <div id="retrieved-container" style="display:flex; flex-direction:column; gap:0.5rem; width: 100%;"></div>
                 </div>
             </div>
@@ -145,6 +147,7 @@ ${this.#getRetrieverSnippet('vector')}
     }
 
     performRetrieval() {
+        const lang = state.lang;
         const query = this.shadowRoot.getElementById('user-query').value;
         const method = this.shadowRoot.getElementById('retriever-select').value;
         state.query = query;
@@ -185,15 +188,15 @@ ${this.#getRetrieverSnippet('vector')}
                 el.style.background = colors[method] || '#fef3c7';
                 el.style.borderColor = borderColors[method] || '#d97706';
                 el.innerHTML = `
-                    <span><b>${node.id}</b> (z dokumentu ${node.parentId})</span>
-                    <span style="color: ${borderColors[method]}; font-weight: bold;">Score: ${node.score}</span>
+                    <span><b>${node.id}</b> (${t('stage4FromDoc', lang)} ${node.parentId})</span>
+                    <span style="color: ${borderColors[method]}; font-weight: bold;">${t('stage4Score', lang)} ${node.score}</span>
                 `;
                 container.appendChild(el);
             }, idx * 400);
         });
 
         const btn = this.shadowRoot.getElementById('btn-retrieve');
-        btn.textContent = `Pobrano Kontekst (${state.retrievedNodes.length} węzłów) [Przejdź dalej →]`;
+        btn.textContent = `${t('stage4Retrieved', lang)} (${state.retrievedNodes.length} ${t('stage4Nodes', lang)}) [${t('goToNext', lang)} →]`;
         btn.style.background = '#10b981';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="5"]').click();
     }

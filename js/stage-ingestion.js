@@ -1,4 +1,5 @@
 import { state, sharedStyles } from './state.js';
+import { t } from './i18n.js';
 
 // --- STAGE 1: INGESTION ---
 class StageIngestion extends HTMLElement {
@@ -52,23 +53,24 @@ documents = reader.load_data(
     }
 
     render() {
+        const lang = state.lang;
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
                 select { width:100%; padding:0.5rem; font-family:monospace; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
-                .source-icons { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+                .source-icons { display:flex; flex-direction:column; gap:10px; justify-content:center; }
                 .src-badge { padding:0.5rem 1rem; border:2px solid #0f172a; background:white; font-family:monospace; font-size:0.8rem; border-radius:4px; }
                 .src-badge.active-src { background:#fef3c7; border-color:#d97706; }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
-                    <h2>Krok 1: Wprowadzanie Danych</h2>
+                    <h2>${t('stage1Title', lang)}</h2>
                     <p><strong>LlamaHub (Konektory) & Loaders:</strong><br/>
-                    Proces normalizacji chaosu. Surowe zbiory danych (pliki PDF, bazy, API) są ładowane przez czytniki.</p>
+                    ${t('stage1Desc1', lang)}</p>
                     <p><strong>Obiekt Document:</strong><br/>
-                    Zunifikowany kontener. Posiada właściwości: <code>id_</code>, <code>text</code> oraz <code>metadata</code>.</p>
+                    ${t('stage1Desc2', lang)} <code>id_</code>, <code>text</code> oraz <code>metadata</code>.</p>
 
-                    <label>Wybierz Loader:</label>
+                    <label>${t('stage1Label', lang)}</label>
                     <select id="loader-select">
                         <option value="simple">SimpleDirectoryReader (lokalne pliki)</option>
                         <option value="wikipedia">WikipediaReader (artykuły Wiki)</option>
@@ -80,7 +82,7 @@ documents = reader.load_data(
                     <div class="code-block" id="code-snippet">
 ${this.#getLoaderSnippet('simple')}
                     </div>
-                    <button id="btn-load">Zainicjuj SimpleDirectoryReader()</button>
+                    <button id="btn-load">${t('stage1Btn', lang)} SimpleDirectoryReader()</button>
                 </div>
                 <div class="vis-area">
                     <div style="display: flex; align-items: center; width: 100%; gap: 20px; flex-wrap:wrap; justify-content:center;">
@@ -90,6 +92,7 @@ ${this.#getLoaderSnippet('simple')}
                             <div class="src-badge">📊 JSON</div>
                             <div class="src-badge">🗄️ DB</div>
                             <div class="src-badge">📓 Notion</div>
+                            <div class="src-badge">🌐 Wiki</div>
                         </div>
                         <div style="font-size: 2rem;">→</div>
                         <div style="border: 4px solid #0f172a; padding: 20px; border-radius: 8px; text-align: center; background: #fff;" id="loader-hub">
@@ -107,7 +110,7 @@ ${this.#getLoaderSnippet('simple')}
         const sel = this.shadowRoot.getElementById('loader-select');
         sel.addEventListener('change', () => {
             const method = sel.value;
-            this.shadowRoot.getElementById('btn-load').textContent = `Zainicjuj ${sel.options[sel.selectedIndex].text.split(' ')[0]}()`;
+            this.shadowRoot.getElementById('btn-load').textContent = `${t('stage1Btn', lang)} ${sel.options[sel.selectedIndex].text.split(' ')[0]}()`;
             this.shadowRoot.getElementById('loader-name').textContent = sel.options[sel.selectedIndex].text.split(' ')[0];
             this.#updateSourceIcons(method);
             this.shadowRoot.getElementById('code-snippet').textContent = this.#getLoaderSnippet(method);
@@ -118,7 +121,7 @@ ${this.#getLoaderSnippet('simple')}
 
     #updateSourceIcons(method) {
         const badges = this.shadowRoot.querySelectorAll('.src-badge');
-        const activeMap = { simple: [0, 1], wikipedia: [0], json: [2], database: [3], notion: [4] };
+        const activeMap = { simple: [0, 1], wikipedia: [5], json: [2], database: [3], notion: [4] };
         const active = activeMap[method] || [0,1];
         badges.forEach((b, i) => b.classList.toggle('active-src', active.includes(i)));
     }
@@ -172,10 +175,10 @@ ${this.#getLoaderSnippet('simple')}
         });
 
         const loaderName = this.shadowRoot.getElementById('loader-select').options[this.shadowRoot.getElementById('loader-select').selectedIndex].text.split(' ')[0];
-        this.shadowRoot.getElementById('doc-count').textContent = `Załadowano ${state.documents.length} dokumentów przez ${loaderName}`;
+        this.shadowRoot.getElementById('doc-count').textContent = `${t('stage1LoadedDocs', lang)} ${state.documents.length} ${t('stage1Docs', lang)} ${t('stage1By', lang)} ${loaderName}`;
         
         const btn = this.shadowRoot.getElementById('btn-load');
-        btn.textContent = `Dane załadowane (${state.documents.length} docs) [Przejdź dalej →]`;
+        btn.textContent = `${t('stage1Loaded', lang)} (${state.documents.length} ${t('stage1Docs', lang)}) [${t('stage1Next', lang)} →]`;
         btn.style.background = '#10b981';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="2"]').click();
     }

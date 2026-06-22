@@ -1,4 +1,5 @@
 import { state, sharedStyles } from './state.js';
+import { t } from './i18n.js';
 
 // --- STAGE 6: SYNTHESIS ---
 class StageSynthesis extends HTMLElement {
@@ -63,6 +64,7 @@ print(response)
     }
 
     render() {
+        const lang = state.lang;
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
@@ -120,11 +122,11 @@ print(response)
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
-                    <h2>Krok 6: Synteza i Odpowiedź</h2>
+                    <h2>${t('stage6Title', lang)}</h2>
                     <p><strong>ResponseSynthesizer:</strong><br/>
-                    Łączy wyrafinowane węzły kontekstu oraz zapytanie użytkownika w ostateczny prompt.</p>
+                    ${t('stage6Desc', lang)}</p>
 
-                    <label>Tryb Syntezy (response_mode):</label>
+                    <label>${t('stage6Label', lang)}</label>
                     <select id="synthesis-select">
                         <option value="compact">compact — ściśnij kontekst, generuj</option>
                         <option value="tree_summarize">tree_summarize — hierarchiczna sumaryzacja</option>
@@ -137,23 +139,23 @@ print(response)
 ${this.#getSynthesisSnippet('compact')}
                     </div>
                     <button id="btn-synthesize" ${state.refinedNodes.length === 0 && !state.query ? 'disabled' : ''}>
-                        ${state.refinedNodes.length === 0 && !state.query ? 'Brak danych. Wróć do Kroku 4.' : 'Generuj Odpowiedź'}
+                        ${state.refinedNodes.length === 0 && !state.query ? t('stage6NoData', lang) : t('stage6Btn', lang)}
                     </button>
                 </div>
                 <div class="vis-area">
                     <div style="display:flex; width: 100%; justify-content: space-around; margin-bottom: 2rem;">
                         <div style="background: white; border: 2px dashed #0f172a; padding: 1rem; flex: 1; margin-right: 1rem;">
-                            <b>Query:</b><br>
-                            <small>${state.query || 'Brak zapytania'}</small>
+                            <b>${t('stage6Query', lang)}</b><br>
+                            <small>${state.query || t('stage6NoQuery', lang)}</small>
                         </div>
                         <div style="background: white; border: 2px dashed #0f172a; padding: 1rem; flex: 1; margin-left: 1rem;">
-                            <b>Context Nodes:</b><br>
-                            <small>${state.refinedNodes.map(n => n.id).join(', ') || 'Brak kontekstu'}</small>
+                            <b>${t('stage6ContextNodes', lang)}</b><br>
+                            <small>${state.refinedNodes.map(n => n.id).join(', ') || t('stage6NoContext', lang)}</small>
                         </div>
                     </div>
                     
                     <div class="engine-block" id="llm-engine">
-                        <h3 style="margin-top:0; font-family:monospace;" id="engine-title">LLM Synthesis Engine</h3>
+                        <h3 style="margin-top:0; font-family:monospace;" id="engine-title">${t('stage6Engine', lang)}</h3>
                         <div class="piston" id="p1"></div>
                         <div class="piston" id="p2"></div>
                         <div class="piston" id="p3"></div>
@@ -190,6 +192,7 @@ ${this.#getSynthesisSnippet('compact')}
     }
 
     performSynthesis() {
+        const lang = state.lang;
         const method = this.shadowRoot.getElementById('synthesis-select').value;
         const pistons = this.shadowRoot.querySelectorAll('.piston');
         
@@ -199,7 +202,7 @@ ${this.#getSynthesisSnippet('compact')}
         pistons.forEach(p => p.classList.add(animClass));
 
         const btn = this.shadowRoot.getElementById('btn-synthesize');
-        btn.textContent = 'Przetwarzanie...';
+        btn.textContent = t('stage6Processing', lang);
         btn.disabled = true;
 
         const output = this.shadowRoot.getElementById('final-output');
@@ -228,7 +231,7 @@ ${this.#getSynthesisSnippet('compact')}
             } else {
                 output.classList.remove('typewriter');
                 pistons.forEach(p => p.classList.remove('anim', 'anim-slow', 'anim-fast'));
-                btn.textContent = 'Zakończono. Resetuj?';
+                btn.textContent = t('stage6Finished', lang);
                 btn.disabled = false;
                 btn.onclick = () => window.location.reload();
             }
@@ -238,7 +241,7 @@ ${this.#getSynthesisSnippet('compact')}
 
         const methodNames = { compact:'compact', tree_summarize:'tree_summarize', refine:'refine', simple_summarize:'simple_summarize', accumulate:'accumulate' };
         this.shadowRoot.getElementById('synth-stats').textContent = 
-            `Tryb: ${methodNames[method]} | Kontekst: ${state.refinedNodes.length} węzłów | Query: "${state.query?.substring(0,30)}..."`;
+            `${t('stage6Mode', lang)}: ${methodNames[method]} | ${t('stage6Context', lang)}: ${state.refinedNodes.length} ${t('stage2Nodes', lang)} | Query: "${state.query?.substring(0,30)}..."`;
     }
 }
 customElements.define('stage-synthesis', StageSynthesis);

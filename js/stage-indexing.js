@@ -1,4 +1,5 @@
 import { state, sharedStyles } from './state.js';
+import { t } from './i18n.js';
 
 // --- STAGE 3: INDEXING ---
 class StageIndexing extends HTMLElement {
@@ -49,6 +50,7 @@ index = KnowledgeGraphIndex(nodes)
     }
 
     render() {
+        const lang = state.lang;
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
@@ -80,10 +82,10 @@ index = KnowledgeGraphIndex(nodes)
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
-                    <h2>Krok 3: Indeksowanie (Osadzanie)</h2>
-                    <p><strong>Indeksy:</strong> Mapują węzły na struktury przeszukiwalne. Wybór indeksu determinuje sposób wyszukiwania.</p>
+                    <h2>${t('stage3Title', lang)}</h2>
+                    <p><strong>Indeksy:</strong> ${t('stage3Desc', lang)}</p>
 
-                    <label>Typ Indeksu:</label>
+                    <label>${t('stage3Label', lang)}</label>
                     <select id="index-select">
                         <option value="vector">VectorStoreIndex (cosine similarity)</option>
                         <option value="summary">SummaryIndex (lista sekwencyjna)</option>
@@ -96,11 +98,11 @@ index = KnowledgeGraphIndex(nodes)
 ${this.#getIndexSnippet('vector')}
                     </div>
                     <button id="btn-index" ${state.nodes.length === 0 ? 'disabled' : ''}>
-                        ${state.nodes.length === 0 ? 'Brak węzłów z kroku 2' : 'Zbuduj VectorStoreIndex'}
+                        ${state.nodes.length === 0 ? t('stage3NoNodes', lang) : `${t('stage3Btn', lang)} VectorStoreIndex`}
                     </button>
                 </div>
                 <div class="vis-area">
-                    <h3 style="position:absolute; top:20px; left:20px; margin:0; font-family:monospace;" id="index-title">Vector Database</h3>
+                    <h3 style="position:absolute; top:20px; left:20px; margin:0; font-family:monospace;" id="index-title">${t('stage3VectorDb', lang)}</h3>
                     <div class="vector-store" id="v-store">
                         ${Array(16).fill('<div class="v-cell">[...]</div>').join('')}
                     </div>
@@ -113,7 +115,7 @@ ${this.#getIndexSnippet('vector')}
         idxSel.addEventListener('change', () => {
             const m = idxSel.value;
             this.shadowRoot.getElementById('code-snippet').textContent = this.#getIndexSnippet(m);
-            this.shadowRoot.getElementById('btn-index').textContent = `Zbuduj ${idxSel.options[idxSel.selectedIndex].text.split(' ')[0]}`;
+            this.shadowRoot.getElementById('btn-index').textContent = `${t('stage3Btn', lang)} ${idxSel.options[idxSel.selectedIndex].text.split(' ')[0]}`;
             const titles = { vector:'Vector Database (Cosine)', summary:'Summary List', keyword:'Keyword → Node Map', tree:'Hierarchical Tree', knowledge:'Knowledge Graph' };
             this.shadowRoot.getElementById('index-title').textContent = titles[m] || 'Index';
         });
@@ -122,6 +124,7 @@ ${this.#getIndexSnippet('vector')}
     }
 
     performIndexing() {
+        const lang = state.lang;
         const cells = this.shadowRoot.querySelectorAll('.v-cell');
         const method = this.shadowRoot.getElementById('index-select').value;
         state.vectorIndex = [...state.nodes];
@@ -153,11 +156,11 @@ ${this.#getIndexSnippet('vector')}
         const descs = { vector:'Cosine similarity', summary:'Lista sekwencyjna', keyword:'Mapa słów kluczowych', tree:'Struktura drzewiasta', knowledge:'Graf encja-relacja' };
         this.shadowRoot.getElementById('index-stats').innerHTML = 
             `<strong>${methodNames[method]}</strong><br>
-             Zaindeksowano: ${state.vectorIndex.length} węzłów<br>
-             Typ: ${descs[method]}`;
+             ${t('stage3Indexed', lang)}: ${state.vectorIndex.length} ${t('stage2Nodes', lang)}<br>
+             ${t('stage3Type', lang)}: ${descs[method]}`;
 
         const btn = this.shadowRoot.getElementById('btn-index');
-        btn.textContent = 'Indeks gotowy [Przejdź dalej →]';
+        btn.textContent = `${t('stage3Ready', lang)} [${t('goToNext', lang)} →]`;
         btn.style.background = '#10b981';
         btn.onclick = () => document.querySelector('.step-indicator[data-step="4"]').click();
     }

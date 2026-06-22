@@ -1,3 +1,6 @@
+import { state } from './state.js';
+import { t } from './i18n.js';
+
 // Import all stage modules so custom elements get registered
 import './stage-ingestion.js';
 import './stage-chunking.js';
@@ -10,6 +13,41 @@ import './stage-synthesis.js';
 function initApp() {
     const steps = document.querySelectorAll('.step-indicator');
     const container = document.getElementById('app-container');
+    const langPlBtn = document.getElementById('lang-pl');
+    const langEnBtn = document.getElementById('lang-en');
+
+    // Language switching
+    function updateUILanguage() {
+        const lang = state.lang;
+        
+        // Update header
+        document.getElementById('app-title').textContent = t('title', lang);
+        
+        // Update step indicators
+        steps.forEach((step, idx) => {
+            step.textContent = t(`step${idx + 1}`, lang);
+        });
+        
+        // Update language buttons
+        langPlBtn.classList.toggle('active', lang === 'pl');
+        langEnBtn.classList.toggle('active', lang === 'en');
+        
+        // Re-render active stage
+        const activeComponent = container.querySelector('.active');
+        if (activeComponent && activeComponent.render) {
+            activeComponent.render();
+        }
+    }
+
+    langPlBtn.addEventListener('click', () => {
+        state.lang = 'pl';
+        updateUILanguage();
+    });
+
+    langEnBtn.addEventListener('click', () => {
+        state.lang = 'en';
+        updateUILanguage();
+    });
 
     steps.forEach(step => {
         step.addEventListener('click', () => {

@@ -11,6 +11,7 @@ class PipelineState {
         this.retrievedNodes = [];
         this.refinedNodes = [];
         this.response = "";
+        this.lang = 'pl'; // 'pl' or 'en'
     }
 }
 
