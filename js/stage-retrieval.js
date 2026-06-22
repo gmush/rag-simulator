@@ -53,7 +53,28 @@ retriever = RouterRetriever(
     ]
 )
 nodes = retriever.retrieve("Jak działa RAG?")
-# LLM wybiera najlepszy retriever dla zapytania`
+# LLM wybiera najlepszy retriever dla zapytania`,
+            auto_merging: `from llama_index.retrievers import AutoMergingRetriever
+
+retriever = AutoMergingRetriever(
+    vector_retriever,
+    storage_context,
+    verbose=True
+)
+nodes = retriever.retrieve("Jak działa RAG?")
+# Automatycznie scala child nodes w parent nodes
+# gdy większość children jest relevantna`,
+            query_fusion: `from llama_index.retrievers import QueryFusionRetriever
+
+retriever = QueryFusionRetriever(
+    [vector_retriever, bm25_retriever],
+    similarity_top_k=3,
+    num_queries=3,
+    mode="reciprocal_rerank"
+)
+nodes = retriever.retrieve("Jak działa RAG?")
+# Generuje wiele wariantów zapytania i łączy wyniki
+# Poprawia recall przez query expansion`
         };
         return snippets[method] || snippets.vector;
     }
@@ -67,8 +88,8 @@ nodes = retriever.retrieve("Jak działa RAG?")
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:monospace; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
-                .retriever-badge { display:inline-block; padding:0.25rem 0.75rem; border:2px solid #0f172a; font-family:monospace; font-size:0.7rem; margin:0.25rem; border-radius:4px; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                .retriever-badge { display:inline-block; padding:0.25rem 0.75rem; border:2px solid #0f172a; font-family:'Inter', sans-serif; font-size:0.7rem; margin:0.25rem; border-radius:4px; }
                 .retriever-badge.used { background:#dbeafe; border-color:#3b82f6; }
             </style>
             <div class="stage-layout">
@@ -84,6 +105,10 @@ nodes = retriever.retrieve("Jak działa RAG?")
                         <option value="hybrid">Hybrydowy (vector + BM25 + RRF)</option>
                         <option value="recursive">RecursiveRetriever (hierarchiczny)</option>
                         <option value="router">RouterRetriever (LLM wybiera metodę)</option>
+                        <optgroup label="Advanced Retrievers">
+                            <option value="auto_merging">AutoMergingRetriever (scala child→parent)</option>
+                            <option value="query_fusion">QueryFusionRetriever (query expansion)</option>
+                        </optgroup>
                     </select>
 
                     <label>${t('stage4Query', lang)}</label>
@@ -98,11 +123,11 @@ ${this.#getRetrieverSnippet('vector')}
                 </div>
                 <div class="vis-area" style="align-items: flex-start;">
                     <div style="display:flex; width: 100%; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
-                        <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: monospace;">
-                            <b>${t('stage4QueryVector', lang)}</b><br><span id="q-vec" style="color: #3b82f6;">[...]</span>
+                        <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: 'Inter', sans-serif;">
+                            <b>Query Vector:</b><br><span id="q-vec" style="color: #3b82f6;">[...]</span>
                         </div>
                         <div style="font-size: 1.5rem;" id="method-icon">🧮</div>
-                        <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: monospace;">
+                        <div style="background: white; padding: 1rem; border: 2px solid #0f172a; font-family: 'Inter', sans-serif;">
                             <b>${t('stage4Method', lang)}</b><br><span id="method-label">Cosine Similarity</span>
                         </div>
                     </div>

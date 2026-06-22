@@ -56,7 +56,29 @@ postprocessor = CohereRerank(
 refined_nodes = postprocessor.postprocess_nodes(
     retrieved_nodes
 )
-# ML reranking — model ocenia relevancję od nowa`
+# ML reranking — model ocenia relevancję od nowa`,
+            metadata_replacement: `from llama_index.postprocessor import MetadataReplacementPostprocessor
+
+postprocessor = MetadataReplacementPostprocessor(
+    target_metadata_key="summary"
+)
+refined_nodes = postprocessor.postprocess_nodes(
+    retrieved_nodes
+)
+# Zastępuje tekst węzła jego metadata (np. summary)
+# Przydatne z SummaryExtractor`,
+            prev_next: `from llama_index.postprocessor import PrevNextNodePostprocessor
+
+postprocessor = PrevNextNodePostprocessor(
+    docstore=index.docstore,
+    num_nodes=1,
+    mode="both"  # "previous", "next", or "both"
+)
+refined_nodes = postprocessor.postprocess_nodes(
+    retrieved_nodes
+)
+# Dodaje sąsiednie węzły (previous/next) do kontekstu
+# Rozszerza kontekst o otoczenie każdego węzła`
         };
         return snippets[method] || snippets.similarity;
     }
@@ -70,7 +92,7 @@ refined_nodes = postprocessor.postprocess_nodes(
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:monospace; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
                 .passed { border-left:5px solid #10b981 !important; }
                 .failed { opacity:0.4; text-decoration:line-through; }
                 .reordered { border-left:5px solid #3b82f6 !important; }
@@ -90,6 +112,10 @@ refined_nodes = postprocessor.postprocess_nodes(
                         <option value="reorder">LongContextReorder (kolejność)</option>
                         <option value="optimizer">SentenceEmbeddingOptimizer (trim)</option>
                         <option value="rerank">CohereRerank (ML reranking)</option>
+                        <optgroup label="Advanced Postprocessors">
+                            <option value="metadata_replacement">MetadataReplacementPostprocessor (zamiana tekstu)</option>
+                            <option value="prev_next">PrevNextNodePostprocessor (sąsiednie węzły)</option>
+                        </optgroup>
                     </select>
 
                     <label id="param-label">Similarity Cutoff: <span id="val-param">0.75</span></label>
@@ -117,7 +143,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100px;">
-                            <div style="font-family: monospace; font-weight:bold; background: #0f172a; color: white; padding: 0.5rem; text-align: center;" id="filter-label">
+                            <div style="font-family: 'Inter', sans-serif; font-weight:bold; background: #0f172a; color: white; padding: 0.5rem; text-align: center;" id="filter-label">
                                 FILTER<br>>=<span id="lbl-param">0.75</span>
                             </div>
                             <div style="font-size: 2rem;">→</div>
@@ -125,7 +151,7 @@ ${this.#getPostprocessorSnippet('similarity')}
                         <div style="flex:1;">
                             <h3>${t('stage5Output', lang)}</h3>
                             <div id="refined-nodes" style="min-height: 100px; border: 2px dashed #10b981; padding: 1rem;"></div>
-                            <div id="refined-stats" style="font-family:monospace; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
+                            <div id="refined-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
                         </div>
                     </div>
                 </div>

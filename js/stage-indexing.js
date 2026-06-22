@@ -40,7 +40,32 @@ index = TreeIndex(nodes)
 
 index = KnowledgeGraphIndex(nodes)
 # Graf: encja → relacja → encja
-# Multi-hop reasoning przez połączone węzły`
+# Multi-hop reasoning przez połączone węzły`,
+            property_graph: `from llama_index.indices.property_graph import PropertyGraphIndex
+from llama_index.graph_stores import Neo4jPropertyGraphStore
+
+graph_store = Neo4jPropertyGraphStore(
+    username="neo4j",
+    password="password",
+    url="bolt://localhost:7687"
+)
+
+index = PropertyGraphIndex.from_documents(
+    documents,
+    property_graph_store=graph_store,
+    show_progress=True
+)
+# Łączy graf wiedzy z właściwościami węzłów
+# Obsługuje relacje, atrybuty i metadane`,
+            document_summary: `from llama_index import DocumentSummaryIndex
+
+index = DocumentSummaryIndex(
+    nodes,
+    llm=llm,
+    embed_model=embed_model
+)
+# Tworzy podsumowania dokumentów + indeksuje węzły
+# Szybkie wyszukiwanie po summary, szczegółowe po nodes`
         };
         return snippets[method] || snippets.vector;
     }
@@ -54,7 +79,7 @@ index = KnowledgeGraphIndex(nodes)
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:monospace; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
                 .vector-store {
                     display: grid; grid-template-columns: repeat(4, 1fr);
                     gap: 10px; background: white; padding: 20px;
@@ -69,7 +94,7 @@ index = KnowledgeGraphIndex(nodes)
                     border: 1px dashed #cbd5e1;
                     background: rgba(255,255,255,0.8);
                     display: flex; align-items: center; justify-content: center;
-                    font-family: monospace; font-size: 0.55rem; color: #94a3b8;
+                    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: #94a3b8;
                     transition: all 0.4s; transform: translateZ(0);
                     text-align:center; word-break:break-all;
                 }
@@ -92,6 +117,10 @@ index = KnowledgeGraphIndex(nodes)
                         <option value="keyword">KeywordTableIndex (mapa słów kluczowych)</option>
                         <option value="tree">TreeIndex (hierarchiczne drzewo)</option>
                         <option value="knowledge">KnowledgeGraphIndex (graf wiedzy)</option>
+                        <optgroup label="Advanced Indexes">
+                            <option value="property_graph">PropertyGraphIndex (graf z właściwościami)</option>
+                            <option value="document_summary">DocumentSummaryIndex (podsumowania)</option>
+                        </optgroup>
                     </select>
 
                     <div class="code-block" id="code-snippet">

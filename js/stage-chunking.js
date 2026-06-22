@@ -50,7 +50,69 @@ splitter = SemanticSplitterNodeParser(
     breakpoint_percentile_threshold=95
 )
 nodes = splitter.get_nodes_from_documents(docs)
-# Dzieli tam, gdzie similarity między zdaniami spada`
+# Dzieli tam, gdzie similarity między zdaniami spada`,
+            summary_extractor: `from llama_index.extractors import SummaryExtractor
+from llama_index.ingestion import IngestionPipeline
+
+extractor = SummaryExtractor(
+    llm=llm,
+    summaries=["self"],
+    prompt_template="Summarize: {context_str}"
+)
+
+pipeline = IngestionPipeline(
+    transformations=[
+        SentenceSplitter(),
+        extractor,
+    ]
+)
+nodes = pipeline.run(documents=docs)
+# Ekstrahuje podsumowania do metadata każdego node`,
+            qa_extractor: `from llama_index.extractors import QuestionsAnsweredExtractor
+
+extractor = QuestionsAnsweredExtractor(
+    llm=llm,
+    questions=3,
+)
+
+pipeline = IngestionPipeline(
+    transformations=[
+        SentenceSplitter(),
+        extractor,
+    ]
+)
+nodes = pipeline.run(documents=docs)
+# Generuje pytania, na które odpowiada node — poprawia retrieval`,
+            title_extractor: `from llama_index.extractors import TitleExtractor
+
+extractor = TitleExtractor(
+    llm=llm,
+    nodes=5,  # liczba pierwszych nodes do analizy
+)
+
+pipeline = IngestionPipeline(
+    transformations=[
+        SentenceSplitter(),
+        extractor,
+    ]
+)
+nodes = pipeline.run(documents=docs)
+# Ekstrahuje tytuł dokumentu do metadata`,
+            keyword_extractor: `from llama_index.extractors import KeywordExtractor
+
+extractor = KeywordExtractor(
+    llm=llm,
+    keywords=10,
+)
+
+pipeline = IngestionPipeline(
+    transformations=[
+        SentenceSplitter(),
+        extractor,
+    ]
+)
+nodes = pipeline.run(documents=docs)
+# Ekstrahuje słowa kluczowe do metadata — poprawia keyword search`
         };
         return snippets[method] || snippets.simple;
     }
@@ -64,11 +126,11 @@ nodes = splitter.get_nodes_from_documents(docs)
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:monospace; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
                 .hier-node { border-left:4px solid #8b5cf6 !important; padding-left:1rem; }
                 .hier-node.l2 { margin-left:20px; border-left-color:#a78bfa !important; }
                 .hier-node.l3 { margin-left:40px; border-left-color:#c4b5fd !important; }
-                .chunk-label { font-family:monospace; font-size:0.7rem; color:#64748b; margin-top:0.25rem; }
+                .chunk-label { font-family:'Inter', sans-serif; font-size:0.7rem; color:#64748b; margin-top:0.25rem; }
             </style>
             <div class="stage-layout">
                 <div class="info-panel">
@@ -83,6 +145,12 @@ nodes = splitter.get_nodes_from_documents(docs)
                         <option value="hierarchical">HierarchicalNodeParser (parent→child)</option>
                         <option value="code">CodeSplitter (świadomy składni kodu)</option>
                         <option value="semantic">SemanticSplitterNodeParser (podobieństwo)</option>
+                        <optgroup label="Metadata Extractors">
+                            <option value="summary_extractor">SummaryExtractor (podsumowania)</option>
+                            <option value="qa_extractor">QuestionsAnsweredExtractor (Q&A)</option>
+                            <option value="title_extractor">TitleExtractor (tytuły)</option>
+                            <option value="keyword_extractor">KeywordExtractor (słowa kluczowe)</option>
+                        </optgroup>
                     </select>
 
                     <label>${t('stage2ChunkSize', lang)} <span id="val-size">1024</span></label>
@@ -106,12 +174,12 @@ ${this.#getSplitterSnippet('simple')}
                         </div>
                     </div>
                     <div style="padding: 2rem; font-size: 2rem; text-align:center;" id="splitter-icon">
-                        ⚙️<br><small style="font-size:0.8rem; font-family:monospace;">TextSplitter</small>
+                        ⚙️<br><small style="font-size:0.8rem; font-family:'Inter', sans-serif;">TextSplitter</small>
                     </div>
                     <div style="flex: 1; padding-left: 1rem;">
                         <h3>${t('stage2TextNodes', lang)}</h3>
                         <div id="nodes-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
-                        <div id="nodes-stats" style="font-family:monospace; font-size:0.8rem; color:#475569; margin-top:0.5rem;"></div>
+                        <div id="nodes-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; color:#475569; margin-top:0.5rem;"></div>
                     </div>
                 </div>
             </div>
@@ -129,7 +197,7 @@ ${this.#getSplitterSnippet('simple')}
             this.shadowRoot.getElementById('code-snippet').textContent = this.#getSplitterSnippet(splitterSel.value);
             const iconMap = { simple:'⚙️', sentence:'📝', hierarchical:'🌳', code:'💻', semantic:'🧠' };
             this.shadowRoot.getElementById('splitter-icon').innerHTML = 
-                `${iconMap[splitterSel.value]||'⚙️'}<br><small style="font-size:0.8rem;font-family:monospace;">${splitterSel.options[splitterSel.selectedIndex].text.split(' ')[0]}</small>`;
+                `${iconMap[splitterSel.value]||'⚙️'}<br><small style="font-size:0.8rem;font-family:'Inter', sans-serif;">${splitterSel.options[splitterSel.selectedIndex].text.split(' ')[0]}</small>`;
         });
 
         this.shadowRoot.getElementById('chunk-size')?.addEventListener('input', (e) => {

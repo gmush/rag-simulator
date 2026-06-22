@@ -68,7 +68,7 @@ print(response)
         this.shadowRoot.innerHTML = `
             ${sharedStyles}
             <style>
-                select { width:100%; padding:0.5rem; font-family:monospace; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
+                select { width:100%; padding:0.5rem; font-family:'Inter', sans-serif; border:2px solid #0f172a; border-radius:4px; margin-bottom:1rem; background:white; }
                 .engine-block {
                     border: 4px solid #0f172a;
                     background: #e2e8f0;
@@ -103,7 +103,7 @@ print(response)
                 .output-box {
                     background: #1e293b;
                     color: #10b981;
-                    font-family: monospace;
+                    font-family: 'Inter', sans-serif;
                     padding: 1rem;
                     border-radius: 4px;
                     min-height: 80px;
@@ -155,7 +155,7 @@ ${this.#getSynthesisSnippet('compact')}
                     </div>
                     
                     <div class="engine-block" id="llm-engine">
-                        <h3 style="margin-top:0; font-family:monospace;" id="engine-title">${t('stage6Engine', lang)}</h3>
+                        <h3 style="margin-top:0; font-family:'Inter', sans-serif;" id="engine-title">${t('stage6Engine', lang)}</h3>
                         <div class="piston" id="p1"></div>
                         <div class="piston" id="p2"></div>
                         <div class="piston" id="p3"></div>
@@ -164,7 +164,7 @@ ${this.#getSynthesisSnippet('compact')}
                     <div style="font-size: 2rem; margin: 1rem 0;">↓</div>
 
                     <div class="output-box" id="final-output"></div>
-                    <div id="synth-stats" style="font-family:monospace; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
+                    <div id="synth-stats" style="font-family:'Inter', sans-serif; font-size:0.8rem; margin-top:0.5rem; color:#475569;"></div>
                 </div>
             </div>
         `;

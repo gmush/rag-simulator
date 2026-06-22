@@ -1,24 +1,21 @@
 :root {
-    --bg-color: #f0f4f8;
+    --bg-color: #28375a;
     --grid-color: #cbd5e1;
     --primary: #0f172a;
-    --accent: #f59e0b;
-    --accent-hover: #d97706;
+    --accent: #0bb3f5;
+    --accent-hover: #0669d9;
     --node-bg: #e2e8f0;
     --node-border: #64748b;
     --text-main: #1e293b;
     --text-muted: #475569;
-    --font-mono: 'Courier New', Courier, monospace;
-    --font-sans: system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
     margin: 0;
     padding: 0;
     background-color: var(--bg-color);
-    background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 20px 20px;
     font-family: var(--font-sans);
     color: var(--text-main);
@@ -32,7 +29,6 @@ header {
     background: var(--primary);
     color: white;
     padding: 1rem 2rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     z-index: 10;
     display: flex;
     justify-content: space-between;
@@ -125,9 +121,8 @@ main > *.active {
 .panel {
     background: rgba(255, 255, 255, 0.9);
     border: 2px solid var(--primary);
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 1.5rem;
-    box-shadow: 4px 4px 0 var(--primary);
     display: flex;
     flex-direction: column;
 }
@@ -174,14 +169,12 @@ button {
     font-family: var(--font-mono);
     cursor: pointer;
     border-radius: 4px;
-    box-shadow: 3px 3px 0 var(--primary);
-    transition: transform 0.1s, box-shadow 0.1s;
+    transition: background 0.2s;
 }
 
 button:hover { background: var(--accent-hover); }
 button:active {
-    transform: translate(3px, 3px);
-    box-shadow: 0px 0px 0 var(--primary);
+    transform: translateY(1px);
 }
 
 input[type="range"], input[type="text"] {
@@ -235,7 +228,7 @@ input[type="range"], input[type="text"] {
     text-align: center;
     font-family: var(--font-mono);
     font-weight: bold;
-    box-shadow: 2px 2px 0 var(--primary);
+    border-radius: 4px;
     position: relative;
     transition: all 0.3s ease;
 }
@@ -246,6 +239,7 @@ input[type="range"], input[type="text"] {
     font-size: 0.8rem;
     background: var(--node-bg);
     border-color: var(--node-border);
+    border-radius: 4px;
 }
 
 .hub-funnel {
@@ -261,6 +255,7 @@ input[type="range"], input[type="text"] {
     justify-content: center;
     font-weight: bold;
     font-family: var(--font-mono);
+    border-radius: 4px;
 }
 
 .gears {
@@ -277,6 +272,7 @@ input[type="range"], input[type="text"] {
     padding: 20px;
     background: white;
     border: 2px solid var(--primary);
+    border-radius: 4px;
     perspective: 1000px;
 }
 
@@ -290,17 +286,18 @@ input[type="range"], input[type="text"] {
     font-size: 0.6rem;
     color: transparent;
     transition: all 0.5s;
+    border-radius: 4px;
 }
 .vector-cell.filled {
     background: var(--accent);
     border: 2px solid var(--primary);
     color: white;
     transform: translateZ(20px);
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    border-radius: 4px;
 }
 
 .anim-element { position: absolute; transition: all 1s ease-in-out; }
 
 /* Layout overrides for shadow doms */
 .stage-layout { display: flex; width: 100%; gap: 2rem; height: 100%; }
-.vis-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--node-border); background: rgba(255,255,255,0.5); border-radius: 8px; padding: 2rem; position: relative;}
+.vis-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--node-border); background: rgba(255,255,255,0.5); border-radius: 4px; padding: 2rem; position: relative;}
