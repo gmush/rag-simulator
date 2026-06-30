@@ -128,11 +128,11 @@ print(response)
 
                     <label>${t('stage6Label', lang)}</label>
                     <select id="synthesis-select">
-                        <option value="compact">compact — ściśnij kontekst, generuj</option>
-                        <option value="tree_summarize">tree_summarize — hierarchiczna sumaryzacja</option>
-                        <option value="refine">refine — iteracyjne uszczegóławianie</option>
-                        <option value="simple_summarize">simple_summarize — prosta sumaryzacja</option>
-                        <option value="accumulate">accumulate — akumulacja odpowiedzi</option>
+                        <option value="compact">🤖 compact — ściśnij kontekst, generuj</option>
+                        <option value="tree_summarize">🤖 tree_summarize — hierarchiczna sumaryzacja</option>
+                        <option value="refine">🤖 refine — iteracyjne uszczegóławianie</option>
+                        <option value="simple_summarize">🤖 simple_summarize — prosta sumaryzacja</option>
+                        <option value="accumulate">🤖 accumulate — akumulacja odpowiedzi</option>
                     </select>
 
                     <div class="code-block" id="code-snippet">

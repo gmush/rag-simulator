@@ -119,7 +119,7 @@ index = DocumentSummaryIndex(
                         <option value="knowledge">KnowledgeGraphIndex (graf wiedzy)</option>
                         <optgroup label="Advanced Indexes">
                             <option value="property_graph">PropertyGraphIndex (graf z właściwościami)</option>
-                            <option value="document_summary">DocumentSummaryIndex (podsumowania)</option>
+                            <option value="document_summary">🤖 DocumentSummaryIndex (podsumowania)</option>
                         </optgroup>
                     </select>
 

@@ -106,11 +106,11 @@ class StageChunking extends HTMLElement {
                     <label>${t('stage2ExtractorLabel', lang)}</label>
                     <select id="extractor-select">
                         <option value="none">${t('stage2ExtractorNone', lang)}</option>
-                        <option value="summary">SummaryExtractor (podsumowania)</option>
-                        <option value="qa">QuestionsAnsweredExtractor (pytania)</option>
-                        <option value="title">TitleExtractor (tytuł dokumentu)</option>
-                        <option value="entities">EntityExtractor (encje)</option>
-                        <option value="keyword">KeywordExtractor (słowa kluczowe)</option>
+                        <option value="summary">🤖 SummaryExtractor (podsumowania)</option>
+                        <option value="qa">🤖 QuestionsAnsweredExtractor (pytania)</option>
+                        <option value="title">🤖 TitleExtractor (tytuł dokumentu)</option>
+                        <option value="entities">🤖 EntityExtractor (encje)</option>
+                        <option value="keyword">🤖 KeywordExtractor (słowa kluczowe)</option>
                     </select>
 
                     <label>${t('stage2ChunkSize', lang)} <span id="val-size">1024</span></label>
